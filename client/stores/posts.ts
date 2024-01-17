@@ -2,6 +2,7 @@ import type { Pagination } from "~/helpers/types";
 import { type AxiosStatic } from "axios";
 import axios from "~/plugins/axios";
 import { defineStore } from "pinia";
+import type { User } from "./user";
 
 export interface Post {
   id: number;
@@ -15,12 +16,15 @@ export interface Post {
   descriptionAdmin?: string;
   created_at: Date;
   updated_at: Date;
+  city: string,
+  tel: string
   warehouse: {
     id: number;
     name: string;
     created_at: Date;
     updated_at: Date;
   };
+  user : User
 }
 
 export interface Warehouse {
@@ -29,6 +33,12 @@ export interface Warehouse {
   updated_at: Date;
   created_at: Date;
 }
+
+
+interface PostParams {
+  search?: string
+}
+
 
 // @ts-ignore
 let $axios: AxiosStatic = axios().provide.axios;
@@ -40,8 +50,10 @@ export const usePostsStore = defineStore("posts", {
   }),
   getters: {},
   actions: {
-    async getPosts() {
-      let data = await $axios.get("/api/posts");
+    async getPosts(params? : PostParams) {
+      let data = await $axios.get("/api/posts", {
+        params: params
+      });
       if (Array.isArray(data?.data?.data)) {
         this.posts = data.data.data;
       }

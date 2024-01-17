@@ -28,8 +28,8 @@ const isOpenInfo = ref(false);
 
 
 onMounted(async () => {
+    await $post.getWarehouse();
     await $post.getPosts();
-    
 });
 
 

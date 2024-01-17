@@ -10,7 +10,7 @@ class Post extends Model
     use HasFactory;
 
 
-    protected $with = ['warehouse'];
+    protected $with = ['warehouse', 'user'];
     
     protected $fillable = [
         'code',
@@ -21,10 +21,17 @@ class Post extends Model
         'issuedClient',
         'description',  // Добавьте 'description' к этому массиву
         'descriptionAdmin',
+        'tel',
+        'city'
     ];
 
     public function warehouse()
     {
         return $this->belongsTo(Warehouse::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

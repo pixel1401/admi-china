@@ -6,13 +6,19 @@ import toast from "~/plugins/toast";
 // @ts-ignore
 const $toast = () => toast({} as any).provide.toast;
 
+// @ts-ignore
+
 export default defineNuxtPlugin((_NuxtApp) => {
+
   axios.defaults.withCredentials = true;
-  axios.defaults.baseURL = "http://localhost:8000";
+
+  
+  axios.defaults.baseURL = _NuxtApp?.$config.public.API_URL ?? "https://app.chinatop12.kz";
 
 
   // Интерцептор запросов
   axios.interceptors.request.use((config) => {
+    
     $toast().add({ title: "Ожидание", color: "orange", id: config.url });
     return config;
   });

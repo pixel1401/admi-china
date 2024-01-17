@@ -20,7 +20,6 @@
 </template>
 
 <script setup lang="ts">
-
     const {isOpen} = defineProps(['isOpen'])
     const emit = defineEmits(['closeModal'])
 

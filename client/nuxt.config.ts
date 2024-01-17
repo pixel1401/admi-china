@@ -1,5 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+
+  runtimeConfig: {
+    public: {
+      API_URL: process.env.API_URL,
+    },
+  },
+  
   typescript: {
     strict: true
   },
@@ -28,4 +35,6 @@ export default defineNuxtConfig({
   },
   image: {},
   devtools: { enabled: true },
+
+  
 });

@@ -13,6 +13,14 @@
                     <UInput v-model="createPostState.code" />
                 </UFormGroup>
 
+                <UFormGroup class="mt-2" label="Город" name="city">
+                    <UInput v-model="createPostState.city" />
+                </UFormGroup> 
+
+                <InputNumber class="mt-2" :phone-number="createPostState.tel" @change-num="(value: string) => {
+                    createPostState.tel = value
+                }" /> 
+
                 <UFormGroup class="mt-2" label="Описание" name="description">
                     <UTextarea v-model="createPostState.description" type="text" />
                 </UFormGroup>
@@ -21,8 +29,8 @@
                     <USelectMenu :model-value="createPostState.warehouseName" @change="(e) => {
                         createPostState.warehouseName = e;
                         choseOption();
-                    }" :options="$post?.warehouse ?? []" placeholder="" 
-                        value-attribute="name" option-attribute="name"  />
+                    }" :options="$post?.warehouse ?? []" placeholder="" value-attribute="name"
+                        option-attribute="name" />
                 </UFormGroup>
 
                 <template #footer>
@@ -39,12 +47,15 @@
 
 const { $axios } = useNuxtApp()
 const $post = usePostsStore();
+const $user = useUserStore();
 
 const createPostState = reactive({
     description: '',
     code: undefined,
-    warehouse_id : undefined ,
-    warehouseName: undefined
+    warehouse_id: undefined,
+    warehouseName: undefined,
+    city: $user?.user?.city ?? '',
+    tel: $user?.user?.tel ?? ''
 })
 
 
@@ -56,8 +67,8 @@ const { isOpenProps } = defineProps({
 
 const emits = defineEmits(['closeModal'])
 
-const choseOption = ()=> {
-    createPostState.warehouse_id = $post.warehouse?.find((item)=> item.name == createPostState.warehouseName)?.id ?? '' as any;
+const choseOption = () => {
+    createPostState.warehouse_id = $post.warehouse?.find((item) => item.name == createPostState.warehouseName)?.id ?? '' as any;
 }
 
 const validate = async (stateArg: typeof createPostState) => {

@@ -1,5 +1,5 @@
 <template>
-    <UInput v-model="search" class="mt-4" placeholder="Поиск" />
+    <UInput :value="search" @input="debouncedInput" class="mt-4" placeholder="Поиск" />
 
     <div class="flex flex-wrap mt-4 gap-5 ">
         <template v-for="post in posts">
@@ -39,6 +39,7 @@
             </UCard>
         </template>
     </div>
+    <!-- <UPagination v-model="page" :page-count="5" :total="items.length" /> -->
     <UCard class="mt-7 w-full">
         Количество треков: {{ posts?.length }}
     </UCard>
@@ -48,6 +49,7 @@
 
 <script setup lang="ts">
 import {formatDate} from '~/helpers/index';
+import {useDebounce} from '~/hooks/useDebounce';
 
 const $user = useUserStore();
 const $post = usePostsStore();
@@ -60,15 +62,23 @@ const { posts } = defineProps({
     }
 })
 
-watch($post , () => {
-    console.log($post.posts);
-})
-
 
 
 const isEdit = ref(false);
 const editPost = ref<Post | null>(null);
 const search = ref('')
+
+
+const debouncedInput = useDebounce(
+  (e) => search.value = e.target.value,
+  500
+);
+
+
+watch(search, () => {
+    console.log(search.value);
+    $post.getPosts({search: search.value})
+})
 
 const onIsEdit = () => {
     isEdit.value = false;

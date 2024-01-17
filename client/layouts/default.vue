@@ -6,7 +6,9 @@
                 <div class="w-5 h-5 bg-red-800">
                 </div>
                 <div class="flex items-center">
-                    <h1 class="text-xl">{{ $user?.user?.name ?? '' }}</h1>
+                    <UButton variant="link" v-if="$user.user" @click="() => handleEditProfile()">
+                        <h1 class="text-xl">{{ $user?.user?.name ?? '' }}</h1>
+                    </UButton>
                     <UDivider />
                     <UButton @click="onExit()" color="red" variant="link" class="text-xl">Выход</UButton>
                 </div>
@@ -24,7 +26,9 @@
             <UButton :icon="isDark ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'"
                 class="fixed bottom-4 right-4" color="gray" variant="ghost" aria-label="Theme" @click="isDark = !isDark" />
         </ClientOnly>
-    </div>
+
+            <ProfileEdit :is-open="isEditProfile" @close-modal="handleCloseEditProfile"/>
+        </div>
 </template>
 
 
@@ -32,6 +36,8 @@
 const $user = useUserStore();
 const colorMode = useColorMode()
 const THEME_KEY = 'THEME_KEY';
+
+const isEditProfile = ref(false);
 
 const isDark = computed({
     get() {
@@ -57,7 +63,16 @@ onMounted(() => {
 
 const onExit = () => {
     $user.exitClearUser();
+}
 
+
+const handleEditProfile = () => {
+    isEditProfile.value = true;
+}
+
+const handleCloseEditProfile = () => {
+
+    isEditProfile.value = false;
 }
 
 </script>

@@ -6,8 +6,10 @@
             <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
                 <template #header>
                     <h2>Добавить</h2>
+                    <h4>{{ editPostState.user.name }}  {{ editPostState.user.lastName }}</h4>
+                    <h5>{{ editPostState.user.tel }}</h5>
                 </template>
-
+                
                 <UFormGroup label="Трек-код" name="code">
                     <UInput v-model="editPostState.code" />
                 </UFormGroup>
@@ -34,6 +36,17 @@
                         choseOption();
                     }" :options="$post.warehouse!" placeholder="" 
                         value-attribute="name" option-attribute="name"  />
+                </UFormGroup>
+
+                <InputNumber class="mt-2" :phone-number="editPostState.tel" @change-num="(value: string) => {
+                    editPostState.tel = value
+                }" /> 
+
+                <UFormGroup label="Город поста" name="tel_post" class="mt-2">
+                    <UInput v-model="editPostState.city" />
+                </UFormGroup>
+                <UFormGroup   label="Город пользователя" name="tel_post" class="mt-2">
+                    <UInput :disabled="true" v-model="editPostState.user.city" />
                 </UFormGroup>
 
 

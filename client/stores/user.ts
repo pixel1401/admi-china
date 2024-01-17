@@ -11,6 +11,8 @@ export interface User {
   email_verified_at: null;
   created_at: Date;
   updated_at: Date;
+  city?: string
+
 }
 
 // @ts-ignore

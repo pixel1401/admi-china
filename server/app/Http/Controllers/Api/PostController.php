@@ -70,6 +70,8 @@ class PostController extends Controller
                 'issuedClient' => 'nullable|date',
                 'description' => 'nullable|string|max:255',
                 'descriptionAdmin' => 'nullable|string|max:255',
+                'city' => 'nullable|string|max:255',
+                'tel' => 'nullable|string|max:255',
                 // Добавьте другие правила валидации
             ]);
 
@@ -129,6 +131,8 @@ class PostController extends Controller
                 'issuedClient' => 'nullable|date',
                 'description' => 'nullable|string',
                 'descriptionAdmin' => 'nullable|string',
+                'city' => 'nullable|string|max:255',
+                'tel' => 'nullable|string|max:255',
             ]);
 
             // Обновление данных поста
