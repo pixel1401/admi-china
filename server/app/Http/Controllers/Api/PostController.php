@@ -29,6 +29,10 @@ class PostController extends Controller
                 // Добавьте другие условия поиска по необходимости
             }
 
+            $query->where(function ($query) {
+                $query->whereNull('sentFrom')->orWhere('sentFrom', '');
+            });
+
             $posts = $query->paginate(10);
 
             // $posts = Post::paginate(10, ['*'], 'page', 2);
@@ -48,6 +52,33 @@ class PostController extends Controller
             return response()->json(['error' => $th->getMessage()], 400);
         }
     }
+
+
+ 
+    public function indexArchive (Request $request) {
+        try {
+            $query = Post::query();
+
+            if (Auth::user()->status !== 'admin') {
+                $query->where('user_id', Auth::id());
+            }
+
+            if ($request->has('search')) {
+                $searchTerm = $request->input('search');
+                $query->where('code', 'like', "%{$searchTerm}%")
+                    ->orWhere('description', 'like', "%{$searchTerm}%");
+            }
+
+            $query->whereNotNull('sentFrom');
+
+            $posts = $query->paginate(10);
+
+            return response()->json($posts);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 400);
+        }
+    }
+
 
     /**
      * Show the form for creating a new resource.

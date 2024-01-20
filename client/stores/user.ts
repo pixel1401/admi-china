@@ -7,7 +7,7 @@ export interface User {
   name: string;
   lastName: string;
   email: string;
-  tel: null;
+  tel: string;
   email_verified_at: null;
   created_at: Date;
   updated_at: Date;
@@ -19,7 +19,7 @@ export interface User {
 let $axios : AxiosStatic = axios().provide.axios;
 
 export const useUserStore = defineStore("user", {
-  state: (): { user: any | null } => ({
+  state: (): { user: User | null } => ({
     user: null,
   }),
   getters: {
@@ -35,9 +35,17 @@ export const useUserStore = defineStore("user", {
 
     async login(event : any) {
       await $axios.get("/sanctum/csrf-cookie");
-      await $axios.post("/login", event.data).then(async () => {
-        await this.getUserOwn()
-        await navigateTo("/");
+      await $axios.post("/login", event.data).then(async (res: any) => {
+        console.log(res);
+        if(!res) return 
+        if(res?.message?.errors) {
+
+        }else {
+          console.log('wadaw');
+          
+          await this.getUserOwn()
+          await navigateTo("/");
+        }
       });
     },
 
@@ -47,6 +55,14 @@ export const useUserStore = defineStore("user", {
 
       }else {
         await navigateTo('/login');
+      }
+    },
+
+
+    async updateUser(params : any) {
+      let data = await $axios.put('/api/user/update', params);
+      if(data.data.data) {
+        this.user = data.data.data;
       }
     },
 

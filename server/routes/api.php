@@ -30,11 +30,18 @@ Route::middleware(['auth:sanctum'])->group( function () {
     Route::get('/logged-in-user', [UserController::class, 'loggedInUser']);
     Route::get('/user/${id}', [UserController::class, 'show']);
 
+    Route::put('/user/update' , [UserController::class , 'update']);
+
+
     // POST
     Route::get('/posts', [PostController::class, 'index']);
     Route::post('/post', [PostController::class, 'store']);
     Route::delete('/post/{id}', [PostController::class, 'destroy']);
     Route::put('/post/{id}', [PostController::class, 'update']);
+
+    Route::get('/posts/archive/', [PostController::class, 'indexArchive']);
+    
+
 
 
     // Warehouse

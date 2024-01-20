@@ -74,10 +74,13 @@ const isDisabledBtn = ref(false);
 const validate = (state: any): FormError[] => {
     const errors = []
     if (!state.email) errors.push({ path: 'email', message: 'Обязательный' })
-    if (!state.password  && isRegister) errors.push({ path: 'password', message: 'Обязательный' })
-    if (state?.password?.length < 8 && isRegister) errors.push({ path: 'password', message: 'Количество символов должен быть больше 8' })
-    if (state.password != state.password_confirmation && isRegister) errors.push({ path: 'password_confirmation', message: 'Ошибка' })
+    if (!state.name) errors.push({ path: 'name', message: 'Обязательный' })
+    if (!state.lastName) errors.push({ path: 'lastName', message: 'Обязательный' })
+    // if (!state.password  && isRegister) errors.push({ path: 'password', message: 'Обязательный' })
+    // if (state?.password?.length < 8 && isRegister) errors.push({ path: 'password', message: 'Количество символов должен быть больше 8' })
+    // if (state.password != state.password_confirmation && isRegister) errors.push({ path: 'password_confirmation', message: 'Ошибка' })
     if (!state.tel) errors.push({ path: 'tel', message: 'Обязательный' })
+    if (!state.city) errors.push({ path: 'city', message: 'Обязательный' })
     if (!state.name) errors.push({ path: 'name', message: 'Обязательный' })
     if (state?.tel?.length != 16) errors.push({ path: 'tel', message: 'Пример: +7 707 777 77 77' })
     return errors

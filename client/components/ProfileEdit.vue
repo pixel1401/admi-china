@@ -5,7 +5,7 @@
         <UModal :model-value="isOpen" @close="() => {
             handleClose()
         }">
-            <ProfileCard :is-register="false" @on-submit="onSubmit" :user="$user.user">
+            <ProfileCard v-if="$user.user" :is-register="false" @on-submit="onSubmit" :user="$user.user">
                 <UButton type="submit">Сохранить</UButton>
                 <template #title>
                     <h2>Профиле</h2>
@@ -30,8 +30,10 @@ const isDisabledBtn = ref(false);
 
 
 async function onSubmit(event: any) {
-    console.log(event.data);
-    
+    if(event.data) {
+        $user.updateUser(event.data);
+    }
+
     // isDisabledBtn.value = true;
     // $user.register(event.data);
     // isDisabledBtn.value = false;

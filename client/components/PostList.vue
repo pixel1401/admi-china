@@ -22,13 +22,14 @@
                                 </div>
                             </template>
                         </UPopover>
-                        <UButton v-if="$user?.user?.status === 'admin'" @click="selectEditPost(post)" variant="link" icon="solar:pen-new-square-linear"/>
+                        <UButton v-if="$user?.user?.status === 'admin'" @click="selectEditPost(post)" variant="link"
+                            icon="solar:pen-new-square-linear" />
                     </div>
                 </template>
                 <div class="mb-3">
                     <p>{{ post.description }}</p>
                 </div>
-                <UDivider/>
+                <UDivider />
                 <div class="flex flex-col  gap-3 mt-5">
                     <PostInfoItem :title="'Дата регистрации клиентом'" :value="formatDate(post?.created_at)" />
                     <PostInfoItem :title="'Склад в Китае'" :value="post.warehouseChina" />
@@ -39,28 +40,32 @@
             </UCard>
         </template>
     </div>
-    <!-- <UPagination v-model="page" :page-count="5" :total="items.length" /> -->
-    <UCard class="mt-7 w-full">
-        Количество треков: {{ posts?.length }}
+    <div class="flex justify-center mt-6">
+        <UPagination v-if="dataPosts" @update:model-value="handleChangePagination" :model-value="dataPosts.current_page"
+        :page-count="5" :total="dataPosts.total" />
+    </div>
+
+    <UCard v-if="dataPosts" class="mt-7 w-full">
+        Количество треков: {{ dataPosts?.total }}
     </UCard>
 
-    <PostEdit v-if="editPost" :is-open-props="isEdit" :post="editPost" @close-modal="onIsEdit"/>
+    <PostEdit v-if="editPost" :is-open-props="isEdit" :post="editPost" @close-modal="onIsEdit" />
 </template>
 
 <script setup lang="ts">
-import {formatDate} from '~/helpers/index';
-import {useDebounce} from '~/hooks/useDebounce';
+import { formatDate } from '~/helpers/index';
+import { useDebounce } from '~/hooks/useDebounce';
+import type { Pagination } from '~/helpers/types';
 
 const $user = useUserStore();
 const $post = usePostsStore();
 
+interface PostsProps {
+    posts: Array<Post>,
+    dataPosts: Pagination<Post>
+}
 
-const { posts } = defineProps({
-    posts: {
-        type: Array<Post>,
-            
-    }
-})
+const { posts, dataPosts } = defineProps<PostsProps>()
 
 
 
@@ -70,14 +75,14 @@ const search = ref('')
 
 
 const debouncedInput = useDebounce(
-  (e) => search.value = e.target.value,
-  500
+    (e) => search.value = e.target.value,
+    500
 );
 
 
 watch(search, () => {
     console.log(search.value);
-    $post.getPosts({search: search.value})
+    $post.getPosts({ search: search.value })
 })
 
 const onIsEdit = () => {
@@ -85,11 +90,14 @@ const onIsEdit = () => {
     editPost.value = null;
 }
 
-const selectEditPost = (selectPost : Post) => {
+const selectEditPost = (selectPost: Post) => {
     editPost.value = selectPost;
     isEdit.value = true;
 }
 
+const handleChangePagination = (page: number) => {
+    $post.getPosts({ page })
+}
 
 
 </script>

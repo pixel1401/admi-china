@@ -1,8 +1,8 @@
-import type { Pagination } from "~/helpers/types";
-import { type AxiosStatic } from "axios";
+import { type AxiosResponse, type AxiosStatic } from "axios";
 import axios from "~/plugins/axios";
 import { defineStore } from "pinia";
 import type { User } from "./user";
+import type { Pagination } from "~/helpers/types";
 
 export interface Post {
   id: number;
@@ -36,8 +36,12 @@ export interface Warehouse {
 
 
 interface PostParams {
-  search?: string
+  search?: string,
+  page?: string | number
 }
+
+
+
 
 
 // @ts-ignore
@@ -47,15 +51,31 @@ export const usePostsStore = defineStore("posts", {
   state: () => ({
     posts: null as Post[] | null,
     warehouse: null as Warehouse[] | null,
+    withDates: null as Pagination<Post> | null,
+    postsArchive: null as Post[] | null,
+    postsArchiveWithData:  null as Pagination<Post> | null,
   }),
   getters: {},
   actions: {
     async getPosts(params? : PostParams) {
-      let data = await $axios.get("/api/posts", {
+      let data = await $axios.get<any , AxiosResponse<Pagination<Post>>>("/api/posts", {
         params: params
       });
+      
       if (Array.isArray(data?.data?.data)) {
         this.posts = data.data.data;
+        this.withDates = data.data;
+      }
+    },
+
+    async getPostsArchive (params? : PostParams) {
+      let data = await $axios.get<any , AxiosResponse<Pagination<Post>>>("/api/posts/archive/", {
+        params: params
+      });
+      
+      if (Array.isArray(data?.data?.data)) {
+        this.postsArchive = data.data.data;
+        this.postsArchiveWithData = data.data;
       }
     },
 
