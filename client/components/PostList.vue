@@ -1,8 +1,8 @@
 <template>
-    <UInput :value="search" @input="debouncedInput" class="mt-4" placeholder="Поиск" />
+    <UInput  :value="search" @input="debouncedInput" class="mt-4 w-full" placeholder="Поиск" />
 
-    <div class="flex flex-wrap mt-4 gap-5 ">
-        <template v-for="post in posts">
+    <div class="flex flex-wrap mt-4 gap-5 w-full">
+        <template v-if="posts && !$post.isLoading"  v-for="post in posts">
             <UCard class="xl:w-[32%] md:w-full">
                 <template #header>
                     <div class="flex justify-between items-center">
@@ -39,6 +39,9 @@
                 </div>
             </UCard>
         </template>
+        <template v-if="!posts || $post.isLoading" v-for="post in [1,2,3]">
+            <USkeleton class="h-[400px] xl:w-[32%] md:w-full" />
+        </template>
     </div>
     <div class="flex justify-center mt-6">
         <UPagination v-if="dataPosts" @update:model-value="handleChangePagination" :model-value="dataPosts.current_page"
@@ -56,17 +59,23 @@
 import { formatDate } from '~/helpers/index';
 import { useDebounce } from '~/hooks/useDebounce';
 import type { Pagination } from '~/helpers/types';
+import type { PostParams } from '~/stores/posts';
 
 const $user = useUserStore();
 const $post = usePostsStore();
 
 interface PostsProps {
-    posts: Array<Post>,
-    dataPosts: Pagination<Post>
+    posts?: Array<Post> | null,
+    dataPosts?: Pagination<Post> | null,
 }
 
 const { posts, dataPosts } = defineProps<PostsProps>()
 
+
+
+const emits = defineEmits<{
+    (e: 'getPosts' , params : PostParams) : void
+}>();
 
 
 const isEdit = ref(false);
@@ -81,8 +90,9 @@ const debouncedInput = useDebounce(
 
 
 watch(search, () => {
-    console.log(search.value);
-    $post.getPosts({ search: search.value })
+    // console.log(search.value);
+    emits('getPosts' , { search: search.value})
+    // $post.getPosts({ search: search.value })
 })
 
 const onIsEdit = () => {

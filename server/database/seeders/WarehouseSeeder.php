@@ -11,8 +11,18 @@ class WarehouseSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run()
     {
-        Warehouse::factory()->count(12)->create();
+        $cities = include(database_path('seeders/cities.php'));
+
+
+
+        foreach ($cities as $city) {
+            Warehouse::insert([
+                'name' => $city,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }

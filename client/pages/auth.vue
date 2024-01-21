@@ -14,10 +14,10 @@
                 <UFormGroup :required="true" label="Подтверждения пароля" name="password_confirmation">
                     <UInput v-model="state.password_confirmation" type="password" />
                 </UFormGroup>
-                <UFormGroup :required="true" label="Имя" name="name">
+                <UFormGroup :required="true" label="Имя на английском" name="name">
                     <UInput v-model="state.name" type="text" />
                 </UFormGroup>
-                <UFormGroup :required="true" label="Фамилия" name="lastname">
+                <UFormGroup :required="true" label="Фамилия на английском" name="lastname">
                     <UInput v-model="state.lastName" type="text" />
                 </UFormGroup>
 

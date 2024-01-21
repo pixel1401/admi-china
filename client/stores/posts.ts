@@ -35,7 +35,7 @@ export interface Warehouse {
 }
 
 
-interface PostParams {
+export interface PostParams {
   search?: string,
   page?: string | number
 }
@@ -54,29 +54,34 @@ export const usePostsStore = defineStore("posts", {
     withDates: null as Pagination<Post> | null,
     postsArchive: null as Post[] | null,
     postsArchiveWithData:  null as Pagination<Post> | null,
+    isLoading : true as boolean,
   }),
   getters: {},
   actions: {
     async getPosts(params? : PostParams) {
+      this.isLoading = true;
       let data = await $axios.get<any , AxiosResponse<Pagination<Post>>>("/api/posts", {
         params: params
       });
       
       if (Array.isArray(data?.data?.data)) {
-        this.posts = data.data.data;
+        this.posts = data?.data?.data ?? null;
         this.withDates = data.data;
       }
+      this.isLoading = false;
     },
 
     async getPostsArchive (params? : PostParams) {
+      this.isLoading = true;
       let data = await $axios.get<any , AxiosResponse<Pagination<Post>>>("/api/posts/archive/", {
         params: params
       });
       
       if (Array.isArray(data?.data?.data)) {
-        this.postsArchive = data.data.data;
+        this.postsArchive = data?.data?.data ?? null;
         this.postsArchiveWithData = data.data;
       }
+      this.isLoading = false;
     },
 
     async addPost(event: any) {

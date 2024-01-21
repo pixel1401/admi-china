@@ -25,7 +25,7 @@
                     <UTextarea v-model="createPostState.description" type="text" />
                 </UFormGroup>
 
-                <UFormGroup class="mt-2" label="Склад" name="warehouse">
+                <UFormGroup :required="true" class="mt-2" label="Склад" name="warehouse">
                     <USelectMenu :model-value="createPostState.warehouseName" @change="(e) => {
                         createPostState.warehouseName = e;
                         choseOption();
@@ -45,7 +45,6 @@
 
 <script setup lang="ts">
 
-const { $axios } = useNuxtApp()
 const $post = usePostsStore();
 const $user = useUserStore();
 
@@ -74,6 +73,8 @@ const choseOption = () => {
 const validate = async (stateArg: typeof createPostState) => {
     const errors = []
     if (!stateArg.code) errors.push({ path: 'code', message: 'Обязательно' })
+    if (!stateArg.warehouse_id) errors.push({path: 'warehouse' , message : 'Выберите склад'})
+    if (!stateArg.warehouseName) errors.push({path: 'warehouse' , message : 'Выберите склад'})
     return errors
 }
 
