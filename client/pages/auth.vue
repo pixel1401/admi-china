@@ -1,6 +1,6 @@
 <template>
     <div class="max-w-xl w-full flex flex-col items-center justify-center">
-        <NuxtImg src="/palceholder.jpg" width="150" class="mx-auto"/>
+        <NuxtImg src="/main.jpg" width="150" class="mx-auto"/>
         <UCard class="w-full mt-5" >
             <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
                 <UFormGroup :required="true" label="Email" name="email">
