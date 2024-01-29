@@ -17,7 +17,8 @@ export interface Post {
   created_at: Date;
   updated_at: Date;
   city: string,
-  tel: string
+  tel: string,
+  is_warehouse: (0 | 1) | boolean ,
   warehouse: {
     id: number;
     name: string;
@@ -73,7 +74,7 @@ export const usePostsStore = defineStore("posts", {
 
     async getPostsArchive (params? : PostParams) {
       this.isLoading = true;
-      let data = await $axios.get<any , AxiosResponse<Pagination<Post>>>("/api/posts/archive/", {
+      let data = await $axios.get<any , AxiosResponse<Pagination<Post>>>("/api/archive", {
         params: params
       });
       

@@ -41,7 +41,6 @@ export const useUserStore = defineStore("user", {
         if(res?.message?.errors) {
 
         }else {
-          console.log('wadaw');
           
           await this.getUserOwn()
           await navigateTo("/");

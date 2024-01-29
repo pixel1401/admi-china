@@ -164,6 +164,7 @@ class PostController extends Controller
                 'descriptionAdmin' => 'nullable|string',
                 'city' => 'nullable|string|max:255',
                 'tel' => 'nullable|string|max:255',
+                'is_warehouse' => 'nullable|boolean'
             ]);
 
             // Обновление данных поста

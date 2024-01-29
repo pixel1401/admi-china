@@ -34,7 +34,7 @@
                     <PostInfoItem :title="'Дата регистрации клиентом'" :value="formatDate(post?.created_at)" />
                     <PostInfoItem :title="'Склад в Китае'" :value="post.warehouseChina" />
                     <PostInfoItem :title="`Отправлено из ${post.sentFrom}`" :value="post.sentFrom" />
-                    <PostInfoItem :title="'Склад'" :value="post.warehouse.name" />
+                    <PostInfoItem :title="'Склад'" :value="post.warehouse.name" :is-select="post.is_warehouse"/>
                     <PostInfoItem :title="'Выдан клиенту'" :value="formatDate(post.issuedClient ?? '')" />
                 </div>
             </UCard>

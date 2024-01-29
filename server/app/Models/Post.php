@@ -22,7 +22,8 @@ class Post extends Model
         'description',  // Добавьте 'description' к этому массиву
         'descriptionAdmin',
         'tel',
-        'city'
+        'city',
+        'is_warehouse'
     ];
 
     public function warehouse()

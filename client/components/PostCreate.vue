@@ -1,6 +1,5 @@
 <template>
     <UModal :model-value="isOpenProps" @close="() => {
-        console.count('CloseModal');
         emits('closeModal');
     }">
         <UForm :validate="validate" :state="createPostState" class="space-y-4" @submit="onSubmit">
@@ -13,9 +12,6 @@
                     <UInput v-model="createPostState.code" />
                 </UFormGroup>
 
-                <UFormGroup class="mt-2" label="Город" name="city">
-                    <UInput v-model="createPostState.city" />
-                </UFormGroup> 
 
                 <InputNumber class="mt-2" :phone-number="createPostState.tel" @change-num="(value: string) => {
                     createPostState.tel = value

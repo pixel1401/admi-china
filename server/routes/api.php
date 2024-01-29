@@ -39,7 +39,7 @@ Route::middleware(['auth:sanctum'])->group( function () {
     Route::delete('/post/{id}', [PostController::class, 'destroy']);
     Route::put('/post/{id}', [PostController::class, 'update']);
 
-    Route::get('/posts/archive/', [PostController::class, 'indexArchive']);
+    Route::get('/archive', [PostController::class, 'indexArchive']);
     
 
 

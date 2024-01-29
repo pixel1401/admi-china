@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('posts', function (Blueprint $table) {
 			$table->string('city')->nullable();
 			$table->string('tel')->nullable();
+			$table->boolean('is_warehouse')->default(false);
 		});
     }
 
@@ -25,6 +26,7 @@ return new class extends Migration
         Schema::table('posts', function (Blueprint $table) {
             $table->dropColumn('city');
             $table->dropColumn('tel');
+            $table->dropColumn('is_warehouse');
         });
     }
 };
