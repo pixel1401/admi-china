@@ -4,28 +4,31 @@ import { defineStore } from "pinia";
 import type { User } from "./user";
 import type { Pagination } from "~/helpers/types";
 
+
+
+
 export interface Post {
   id: number;
   code: string;
   user_id: number;
   warehouse_id?: number;
-  warehouseChina?: string;
-  sentFrom?: string;
-  issuedClient?: string;
+  warehouseChina?: boolean;
+  sentFrom?: boolean;
+  issuedClient?: boolean;
   description: string;
   descriptionAdmin?: string;
   created_at: Date;
   updated_at: Date;
-  city: string,
-  tel: string,
-  is_warehouse: (0 | 1) | boolean ,
+  city: string;
+  tel: string;
+  is_warehouse: boolean;
   warehouse: {
     id: number;
     name: string;
     created_at: Date;
     updated_at: Date;
   };
-  user : User
+  user: User;
 }
 
 export interface Warehouse {
@@ -35,15 +38,10 @@ export interface Warehouse {
   created_at: Date;
 }
 
-
 export interface PostParams {
-  search?: string,
-  page?: string | number
+  search?: string;
+  page?: string | number;
 }
-
-
-
-
 
 // @ts-ignore
 let $axios: AxiosStatic = axios().provide.axios;
@@ -54,17 +52,20 @@ export const usePostsStore = defineStore("posts", {
     warehouse: null as Warehouse[] | null,
     withDates: null as Pagination<Post> | null,
     postsArchive: null as Post[] | null,
-    postsArchiveWithData:  null as Pagination<Post> | null,
-    isLoading : true as boolean,
+    postsArchiveWithData: null as Pagination<Post> | null,
+    isLoading: true as boolean,
   }),
   getters: {},
   actions: {
-    async getPosts(params? : PostParams) {
+    async getPosts(params?: PostParams) {
       this.isLoading = true;
-      let data = await $axios.get<any , AxiosResponse<Pagination<Post>>>("/api/posts", {
-        params: params
-      });
-      
+      let data = await $axios.get<any, AxiosResponse<Pagination<Post>>>(
+        "/api/posts",
+        {
+          params: params,
+        }
+      );
+
       if (Array.isArray(data?.data?.data)) {
         this.posts = data?.data?.data ?? null;
         this.withDates = data.data;
@@ -72,12 +73,15 @@ export const usePostsStore = defineStore("posts", {
       this.isLoading = false;
     },
 
-    async getPostsArchive (params? : PostParams) {
+    async getPostsArchive(params?: PostParams) {
       this.isLoading = true;
-      let data = await $axios.get<any , AxiosResponse<Pagination<Post>>>("/api/archive", {
-        params: params
-      });
-      
+      let data = await $axios.get<any, AxiosResponse<Pagination<Post>>>(
+        "/api/archive",
+        {
+          params: params,
+        }
+      );
+
       if (Array.isArray(data?.data?.data)) {
         this.postsArchive = data?.data?.data ?? null;
         this.postsArchiveWithData = data.data;
@@ -88,9 +92,9 @@ export const usePostsStore = defineStore("posts", {
     async addPost(event: any) {
       let data = await $axios.post("/api/post", event);
       if (data?.data?.data) {
-        if(this.posts === null) {
-          this.posts = [data?.data?.data]
-        }else {
+        if (this.posts === null) {
+          this.posts = [data?.data?.data];
+        } else {
           this.posts?.unshift(data.data.data);
         }
       }
@@ -103,15 +107,23 @@ export const usePostsStore = defineStore("posts", {
       }
     },
 
-    async editPost(postArg: Post ) {
-      let data = await $axios.put('/api/post/' + postArg.id , postArg);
-      if(data?.data?.data) {
-        this.posts = this.posts?.map((item) => {
-          if(item.id == postArg.id) {
-            return data.data.data;
+    async editPost(postArg: Post) {
+      let data = await $axios.put("/api/post/" + postArg.id, postArg);
+      if (data?.data?.data) {
+        this.posts =
+          this.posts?.map((item) => {
+            if (item.id == postArg.id) {
+              return data.data.data;
+            }
+            return item;
+          }) ?? [];
+
+          if(this.posts) {
+            this.posts = this.posts.filter((item) => item.issuedClient === false);
           }
-          return item;
-        }) ?? []
+          if(this.postsArchive) {
+            this.postsArchive = this.posts.filter((item) => item.issuedClient === true)
+          }
       }
     },
 

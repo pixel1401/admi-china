@@ -16,9 +16,9 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->foreignId('user_id')->constrained()->onDelete("cascade");
             $table->foreignId('warehouse_id')->nullable()->constrained('warehouses');
-            $table->string('warehouseChina')->nullable();
-            $table->string('sentFrom')->nullable();
-            $table->timestamp('issuedClient')->nullable()->default(null);
+            $table->boolean('warehouseChina')->default(false); // есть ли в склад в китае
+            $table->boolean('sentFrom')->default(false); // sentForm Almaty
+            $table->boolean('issuedClient')->default(false);
             $table->string('description')->nullable();
             $table->string('descriptionAdmin')->nullable();
             $table->timestamps();

@@ -31,11 +31,11 @@
                 </div>
                 <UDivider />
                 <div class="flex flex-col  gap-3 mt-5">
-                    <PostInfoItem :title="'Дата регистрации клиентом'" :value="formatDate(post?.created_at)" />
-                    <PostInfoItem :title="'Склад в Китае'" :value="post.warehouseChina" />
-                    <PostInfoItem :title="`Отправлено из ${post.sentFrom}`" :value="post.sentFrom" />
+                    <PostInfoItem :title="'Дата регистрации клиентом'" :value="formatDate(post?.created_at)" :is-select="undefined" />
+                    <PostInfoItem :title="'Склад в Китае'" :value="post?.warehouseChina" :is-select="post.warehouseChina" />
+                    <PostInfoItem :title="`Отправлено из Алматы`" :value="post?.sentFrom" :is-select="post.sentFrom" />
                     <PostInfoItem :title="'Склад'" :value="post.warehouse.name" :is-select="post.is_warehouse"/>
-                    <PostInfoItem :title="'Выдан клиенту'" :value="formatDate(post.issuedClient ?? '')" />
+                    <PostInfoItem :title="'Выдан клиенту'" :value="post.issuedClient" :is-select="post.issuedClient" />
                 </div>
             </UCard>
         </template>

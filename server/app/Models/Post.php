@@ -26,6 +26,13 @@ class Post extends Model
         'is_warehouse'
     ];
 
+    protected $casts = [
+        'warehouseChina' => 'boolean',
+        'sentFrom' => 'boolean',
+        'issuedClient' => 'boolean',
+        'is_warehouse' => 'boolean'
+     ];
+
     public function warehouse()
     {
         return $this->belongsTo(Warehouse::class);

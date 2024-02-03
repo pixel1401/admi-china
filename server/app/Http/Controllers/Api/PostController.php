@@ -30,7 +30,7 @@ class PostController extends Controller
             }
 
             $query->where(function ($query) {
-                $query->whereNull('sentFrom')->orWhere('sentFrom', '');
+                $query->where('issuedClient', false);
             });
 
             $posts = $query->paginate(10);
@@ -69,7 +69,7 @@ class PostController extends Controller
                     ->orWhere('description', 'like', "%{$searchTerm}%");
             }
 
-            $query->whereNotNull('sentFrom');
+            $query->where('issuedClient', true);
 
             $posts = $query->paginate(10);
 
@@ -96,9 +96,9 @@ class PostController extends Controller
             $request->validate([
                 'code' => 'required|unique:posts',
                 'warehouse_id' => 'nullable|exists:warehouses,id',
-                'warehouseChina' => 'nullable|string|max:255',
-                'sentFrom' => 'nullable|string|max:255',
-                'issuedClient' => 'nullable|date',
+                'warehouseChina' => 'nullable|boolean',
+                'sentFrom' => 'nullable|boolean',
+                'issuedClient' => 'nullable|boolean',
                 'description' => 'nullable|string|max:255',
                 'descriptionAdmin' => 'nullable|string|max:255',
                 'city' => 'nullable|string|max:255',
@@ -157,9 +157,9 @@ class PostController extends Controller
                 'code' => 'required|string|unique:posts,code,' . $postId,
                 'user_id' => 'required|exists:users,id',
                 'warehouse_id' => 'nullable|exists:warehouses,id',
-                'warehouseChina' => 'nullable|string',
-                'sentFrom' => 'nullable|string',
-                'issuedClient' => 'nullable|date',
+                'warehouseChina' => 'nullable|boolean',
+                'sentFrom' => 'nullable|boolean',
+                'issuedClient' => 'nullable|boolean',
                 'description' => 'nullable|string',
                 'descriptionAdmin' => 'nullable|string',
                 'city' => 'nullable|string|max:255',
