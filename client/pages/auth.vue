@@ -62,6 +62,7 @@ const isDisabledBtn = ref(false);
 const validate = (state: any): FormError[] => {
     const errors = []
     if (!state.email) errors.push({ path: 'email', message: 'Обязательный' })
+    if (state.email != state.email.toLowerCase()) errors.push({ path: 'email', message: 'Email должен быть в нижнем регистре' })
     if (!state.password) errors.push({ path: 'password', message: 'Обязательный' })
     if (state?.password?.length < 8) errors.push({ path: 'password', message: 'Количество символов должен быть больше 8' })
     if (state.password != state.password_confirmation)  errors.push({ path: 'password_confirmation', message: 'Ошибка' })

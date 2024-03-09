@@ -14,7 +14,7 @@
       </template>
 
       <div>
-        <p>收件人：K788131-{{ $user.user?.tel?.substring($user?.user?.tel?.length- 5) }}</p>
+        <p>收件人：K585003-{{ $user.user?.tel?.substring($user?.user?.tel?.length- 5) }}</p>
         <p>13824448525</p>
         <p>广州市白云区石门街道 石沙路289号诚达集团16号仓(鑫晟525)</p>
         <p>{{ $user.user?.name }}, {{ $user.user?.tel }}, {{ $user.user?.city }}</p>

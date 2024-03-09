@@ -12,7 +12,8 @@ const state = reactive({
 
 const validate = async (stateArg: typeof state) => {
     const errors = []
-    if (!stateArg.email) errors.push({ path: 'email', message: 'Required' })
+    if (!stateArg.email) errors.push({ path: 'email', message: 'Required' });
+    if (stateArg?.email != (stateArg?.email ?? '')?.toLowerCase()) errors.push({ path: 'email', message: 'Email должен быть в нижнем регистре' })
     if (!stateArg.password) errors.push({ path: 'password', message: 'Required' })
     return errors
 }
