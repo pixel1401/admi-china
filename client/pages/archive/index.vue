@@ -1,10 +1,11 @@
 <template>
         <div class="w-full">
             <UButton @click="handleBack" variant="soft" class="flex justify-center items-center" icon="solar:round-alt-arrow-left-linear" size="xl"/>
-            <PostList 
+            <WidgetPostList 
                 :posts="$post.postsArchive" 
                 :data-posts="$post.postsArchiveWithData" 
                 @get-posts="getPostsArchive"
+                :is-archive="true"
             />
         </div>
 </template>
@@ -19,6 +20,7 @@ const $post = usePostsStore();
 
 onMounted(async () => {
     await $post.getPostsArchive();
+    
 });
 
 const getPostsArchive = async (params? : PostParams) => {

@@ -30,7 +30,11 @@ Route::middleware(['auth:sanctum'])->group( function () {
     Route::get('/logged-in-user', [UserController::class, 'loggedInUser']);
     Route::get('/user/${id}', [UserController::class, 'show']);
 
+    Route::patch('/user/change-password', [UserController::class, 'changePassword']);
+
     Route::put('/user/update' , [UserController::class , 'update']);
+
+    Route::get('/user-have-post', [UserController::class, 'getUsersPost']);
 
 
     // POST

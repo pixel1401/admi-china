@@ -3,7 +3,8 @@
         <nav v-if="Boolean($user.user)"
             class="bg-white z-50  dark:bg-gray-900 w-full fixed top-0 start-0 border-b border-gray-200 dark:border-gray-600">
             <div class="container mx-auto flex justify-between items-center py-3 ">
-                <div class="w-5 h-5 bg-red-800">
+                <div class="w-10 h-10 ">
+                    <NuxtImg src="/main.jpg" width="150" class="mx-auto"/>
                 </div>
                 <div class="flex items-center">
                     <UButton variant="link" v-if="$user.user" @click="() => handleEditProfile()">
@@ -23,11 +24,11 @@
         </div>
 
         <ClientOnly>
-            <UButton :icon="isDark ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'"
-                class="fixed bottom-4 right-4" color="gray" variant="ghost" aria-label="Theme" @click="isDark = !isDark" />
+            <UButton :icon="isDark ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'" 
+                class="fixed bottom-4 right-4 shadow hover:shadow-lg" :color="isDark ? 'gray' : 'green'" variant="ghost" aria-label="Theme" @click="isDark = !isDark" />
         </ClientOnly>
 
-            <ProfileEdit :is-open="isEditProfile" @close-modal="handleCloseEditProfile"/>
+        <WidgetProfileEdit :is-open="isEditProfile" @close-modal="handleCloseEditProfile"/>
         </div>
 </template>
 
@@ -38,6 +39,7 @@ const colorMode = useColorMode()
 const THEME_KEY = 'THEME_KEY';
 
 const isEditProfile = ref(false);
+const isSendHaveUsers = ref(false);
 
 const isDark = computed({
     get() {
@@ -57,6 +59,19 @@ onMounted(() => {
     } else {
         colorMode.preference = "light"
     }
+}, )
+
+
+watch($user , (newValue , oldValue) => {
+    if($user.user?.status == 'admin' && isSendHaveUsers.value == false) {
+        $user.getUserHavePost();   
+        // console.log('SEND');
+        isSendHaveUsers.value = true;
+    }else {
+        isSendHaveUsers.value = false;
+    }
+}, {
+    deep: true
 })
 
 

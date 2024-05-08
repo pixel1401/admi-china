@@ -8,5 +8,5 @@ export default defineNuxtPlugin((nuxtApp) => {
   };
 });
 
-
+export type Toast = ReturnType<typeof useToast>;
 

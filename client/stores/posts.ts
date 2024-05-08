@@ -40,8 +40,12 @@ export interface Warehouse {
 
 export interface PostParams {
   search?: string;
+  user_id?: string | number;
   page?: string | number;
 }
+
+
+
 
 // @ts-ignore
 let $axios: AxiosStatic = axios().provide.axios;
@@ -55,7 +59,9 @@ export const usePostsStore = defineStore("posts", {
     postsArchiveWithData: null as Pagination<Post> | null,
     isLoading: true as boolean,
   }),
-  getters: {},
+  getters: {
+  },
+
   actions: {
     async getPosts(params?: PostParams) {
       this.isLoading = true;
@@ -85,6 +91,7 @@ export const usePostsStore = defineStore("posts", {
       if (Array.isArray(data?.data?.data)) {
         this.postsArchive = data?.data?.data ?? null;
         this.postsArchiveWithData = data.data;
+        
       }
       this.isLoading = false;
     },
@@ -118,12 +125,12 @@ export const usePostsStore = defineStore("posts", {
             return item;
           }) ?? [];
 
-          if(this.posts) {
-            this.posts = this.posts.filter((item) => item.issuedClient === false);
-          }
-          if(this.postsArchive) {
-            this.postsArchive = this.posts.filter((item) => item.issuedClient === true)
-          }
+        if (this.posts) {
+          this.posts = this.posts.filter((item) => item.issuedClient === false);
+        }
+        if (this.postsArchive) {
+          this.postsArchive = this.posts.filter((item) => item.issuedClient === true)
+        }
       }
     },
 
@@ -133,5 +140,11 @@ export const usePostsStore = defineStore("posts", {
         this.warehouse = data.data.data;
       }
     },
+
+    
+    
+
+  
+
   },
 });

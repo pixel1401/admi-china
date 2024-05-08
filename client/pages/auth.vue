@@ -21,7 +21,7 @@
                     <UInput v-model="state.lastName" type="text" />
                 </UFormGroup>
 
-                <InputNumber :phone-number="state.tel" @change-num="(value: string) => {
+                <UIInputNumber :phone-number="state.tel" @change-num="(value: string) => {
                     state.tel = value
                 }"/>
 

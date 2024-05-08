@@ -15,18 +15,28 @@ class PostController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = Post::query();
-
-            if (Auth::user()->status !== 'admin') {
+            $query = Post::query()->with('user');
+            $isAdmin = Auth::user()->status == 'admin';
+            if (!$isAdmin) {
                 $query->where('user_id', Auth::id());
             }
 
             // Добавление условия поиска, если передан параметр 'search'
-            if ($request->has('search')) {
+            if ($request->filled('search')) {
                 $searchTerm = $request->input('search');
-                $query->where('code', 'like', "%{$searchTerm}%")
-                    ->orWhere('description', 'like', "%{$searchTerm}%");
-                // Добавьте другие условия поиска по необходимости
+                $query->where(function ($query) use ($searchTerm) {
+                    $query->whereHas('user', function ($query) use ($searchTerm) {
+                        $query->where('name', 'like', "%{$searchTerm}%")
+                        ->orWhere('lastName', 'like', "%{$searchTerm}%")
+                        ->orWhere('email', 'like', "%{$searchTerm}%");
+                    })->orWhere('code', 'like', "%{$searchTerm}%")
+                      ->orWhere('description', 'like', "%{$searchTerm}%");
+                    // Добавьте другие условия поиска по необходимости
+                });
+            }
+
+            if($request->filled('user_id') && $isAdmin) {
+                $query->where('user_id', $request->input('user_id'));
             }
 
             $query->where(function ($query) {
@@ -57,17 +67,30 @@ class PostController extends Controller
  
     public function indexArchive (Request $request) {
         try {
-            $query = Post::query();
-
-            if (Auth::user()->status !== 'admin') {
+            $query = Post::query()->with('user');
+            $isAdmin = Auth::user()->status == 'admin';
+            if (!$isAdmin) {
                 $query->where('user_id', Auth::id());
             }
 
-            if ($request->has('search')) {
+            // Добавление условия поиска, если передан параметр 'search'
+            if ($request->filled('search')) {
                 $searchTerm = $request->input('search');
-                $query->where('code', 'like', "%{$searchTerm}%")
-                    ->orWhere('description', 'like', "%{$searchTerm}%");
+                $query->where(function ($query) use ($searchTerm) {
+                    $query->whereHas('user', function ($query) use ($searchTerm) {
+                        $query->where('name', 'like', "%{$searchTerm}%")
+                        ->orWhere('lastName', 'like', "%{$searchTerm}%")
+                        ->orWhere('email', 'like', "%{$searchTerm}%");
+                    })->orWhere('code', 'like', "%{$searchTerm}%")
+                      ->orWhere('description', 'like', "%{$searchTerm}%");
+                    // Добавьте другие условия поиска по необходимости
+                });
             }
+
+            if($request->filled('user_id') && $isAdmin) {
+                $query->where('user_id', $request->input('user_id'));
+            }
+
 
             $query->where('issuedClient', true);
 

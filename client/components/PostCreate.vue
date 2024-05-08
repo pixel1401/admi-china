@@ -13,7 +13,7 @@
                 </UFormGroup>
 
 
-                <InputNumber class="mt-2" :phone-number="createPostState.tel" @change-num="(value: string) => {
+                <UIInputNumber class="mt-2" :phone-number="createPostState.tel" @change-num="(value: string) => {
                     createPostState.tel = value
                 }" /> 
 

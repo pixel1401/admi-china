@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
 class UserController extends Controller
 {
     /**
@@ -15,7 +18,7 @@ class UserController extends Controller
     {
         try {
             $user = User::query()->findOrFail(auth()->user()->id);
-            return response()->json(['user'=> $user]);
+            return response()->json(['user' => $user]);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 400);
         }
@@ -44,9 +47,9 @@ class UserController extends Controller
     {
         try {
             $user = User::query()->findOrFail($id);
-            return response()->json(['user'=> $user]);
+            return response()->json(['user' => $user]);
         } catch (\Throwable $th) {
-            return response()->json(['error'=> $th->getMessage()] , 400);
+            return response()->json(['error' => $th->getMessage()], 400);
         }
     }
 
@@ -78,7 +81,7 @@ class UserController extends Controller
                 // Добавьте другие правила валидации
             ]);
 
-            if($user) {
+            if ($user) {
                 $user->update($request->all());
             }
 
@@ -96,5 +99,54 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+
+    // GET USERS FOR DROPDOWN
+    public function getUsersPost()
+    {
+        try {
+            $usersWithIssuedClient = User::whereHas('post', function ($query) {
+                $query->where('issuedClient', true);
+            })->get();
+
+            $usersWithoutIssuedClient = User::whereHas('post', function ($query) {
+                $query->where('issuedClient', false);
+            })->get();
+
+            $responseData = [
+                'archive' => $usersWithIssuedClient,
+                'active' => $usersWithoutIssuedClient,
+            ];
+
+            return response()->json([ 'data' => $responseData]);
+
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th], 400);
+        }
+    }
+
+
+    public function changePassword(Request $request)
+    {
+        try {
+            $request->validate([
+                'password' => 'required|string|min:8|confirmed',
+            ]);
+    
+            $user =  User::findOrFail(auth()->user()->id);
+    
+            if (!$user) {
+                return response()->json(['error' => 'Пользователь не найден'], 401);
+            }
+    
+            $user->password = Hash::make($request->password);
+            $user->save();
+    
+            return response()->json(['message' => 'Пароль успешно изменен'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Произошла ошибка'], 400);
+        }
+        
     }
 }

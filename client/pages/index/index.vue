@@ -1,5 +1,5 @@
 <template>
-    <UContainer>
+    <UContainer class="w-full p-0">
         <div class="flex justify-center">
             <div class="container mx-auto w-[100vw]">
                 <div class="flex justify-between items-center w-full gap-5">
@@ -9,7 +9,7 @@
                 </div>
             </div>
         </div>
-        <PostList :posts="$post.posts" 
+        <WidgetPostList :posts="$post.posts" 
             :data-posts="$post.withDates"
             @get-posts="getPosts"
         />
@@ -23,6 +23,7 @@ import type { PostParams } from '~/stores/posts';
 
 
 const $post = usePostsStore();
+const $user = useUserStore();
 
 
 const isOpenProps = ref(false);
@@ -36,7 +37,10 @@ onMounted(async () => {
     await $post.getWarehouse();
     await $post.getPosts();
     await $post.getPostsArchive();
+
 });
+
+
 
 
 const getPosts = async (params? : PostParams) => {

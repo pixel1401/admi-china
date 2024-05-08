@@ -1,10 +1,15 @@
 // @ts-ignore
 import axios, { AxiosError, AxiosResponse } from "axios";
-import toast from "~/plugins/toast";
+import toast, { type Toast } from "~/plugins/toast";
+
+
+const ignoreUrl = {
+  "/sanctum/csrf-cookie": true,
+}
 
 
 // @ts-ignore
-const $toast = () => toast({} as any).provide.toast;
+const $toast : () => Toast = () => toast({} as any).provide.toast;
 
 // @ts-ignore
 
@@ -14,20 +19,33 @@ export default defineNuxtPlugin((_NuxtApp) => {
 
   
   axios.defaults.baseURL = _NuxtApp?.$config.public.API_URL ?? "https://app.chinatop12.kz";
+  
 
+  const responseToastsIds : string[] = [];
+  const successToastsIds : string[] = [];
 
   // Интерцептор запросов
   axios.interceptors.request.use((config) => {
-    
-    $toast().add({ title: "Ожидание", color: "orange", id: config.url });
+    if(!ignoreUrl.hasOwnProperty(config.url ?? '')) {
+      for(let a of responseToastsIds) {
+        $toast().remove(a);
+      }
+      responseToastsIds.push(config.url ?? '');
+      $toast().add({ title: "Ожидание", color: "orange", id: config.url });
+      // $toast.
+    }
     return config;
   });
 
   // Интерцептор ответов
   axios.interceptors.response.use((response: AxiosResponse) => {
     // Добавьте здесь свою обработку ответа
-    if(!response.config.url) return response;
-    $toast().remove(response.config.url)
+    if(!response.config.url || ignoreUrl.hasOwnProperty(response.config.url ?? '')) return response;
+    $toast().remove(response.config.url);
+    for(let a of successToastsIds) {
+      $toast().remove(a);
+    }
+    successToastsIds.push(response.config.url);
     if(response.data.message) {
       $toast().add({ title: response.data.message, color: "green", id:response.config.url });
     }else {
@@ -38,8 +56,7 @@ export default defineNuxtPlugin((_NuxtApp) => {
 
   // Интерцептор ошибок
   axios.interceptors.response.use(undefined, (error: AxiosError) => {
-    console.log();
-    if(!error.config?.url) return ;
+    if(!error.config?.url || ignoreUrl.hasOwnProperty(error.config.url ?? '')) return ;
     
     $toast().remove(error.config.url)
 
